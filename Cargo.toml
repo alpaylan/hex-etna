@@ -16,17 +16,28 @@ rust-version = "1.85"
 maintenance = { status = "actively-developed" }
 
 [features]
-default = ["std"]
+default = ["std", "etna"]
 alloc = []
 std = ["alloc"]
 serde = ["dep:serde"]
+etna = ["std", "dep:proptest", "dep:quickcheck", "dep:crabcheck", "dep:hegeltest", "dep:rand"]
 
 [[bench]]
 name = "hex"
 harness = false
 
+[[bin]]
+name = "etna"
+path = "src/bin/etna.rs"
+required-features = ["etna"]
+
 [dependencies]
 serde = { version = "1.0", default-features = false, optional = true }
+proptest = { version = "1", optional = true }
+quickcheck = { path = "/Users/akeles/Programming/projects/PbtBenchmark/quickcheck", features = ["etna"], optional = true }
+crabcheck = { path = "/Users/akeles/Programming/projects/PbtBenchmark/crabcheck", optional = true }
+hegeltest = { version = "0.3.7", optional = true }
+rand = { version = "0.9", optional = true }
 
 [dev-dependencies]
 criterion = "0.7.0"

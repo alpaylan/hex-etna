@@ -1,0 +1,40 @@
+# ETNA workload index for hex.
+#
+# One [[variant]] per injected mutation. Source of truth for variant->property
+# mapping. Every other fact is derivable from the source tree:
+#   - marauders list --path .                      (inline marauder mutations)
+#   - grep -rn "pub fn property_" src/etna.rs      (property functions)
+#   - grep -rn "fn witness_.*_case_" tests/        (witness tests)
+#
+# Base commit for this workload is HEAD of master on this tree. Every
+# etna/<variant> branch is master + exactly one marauder converted to its
+# functional form (or an env var M_<variant>=active flip).
+
+name = "hex"
+language = "Rust"
+
+[[variant]]
+name = "from_hex_accepts_whitespace_71c83f2_1"
+property = "from_hex_rejects_whitespace"
+injection = "marauder"
+marauder = "from_hex_accepts_whitespace"
+source_commit = "71c83f2c7aec37c83185d4bb6d81e33f0269b7f4"
+witnesses = [
+    "witness_from_hex_rejects_whitespace_case_space_at_start",
+    "witness_from_hex_rejects_whitespace_case_tab_mid_string",
+]
+frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+files = ["src/lib.rs"]
+
+[[variant]]
+name = "invalid_char_display_raw_764ee61_1"
+property = "invalid_char_error_display_escaped"
+injection = "marauder"
+marauder = "invalid_char_display_raw"
+source_commit = "764ee61536cbeb8cfbce6dba61c1b85398700bb6"
+witnesses = [
+    "witness_invalid_char_error_display_escaped_case_newline",
+    "witness_invalid_char_error_display_escaped_case_tab",
+]
+frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+files = ["src/error.rs"]

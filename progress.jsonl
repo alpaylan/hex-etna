@@ -1,0 +1,9 @@
+{"ts": "2026-04-20T23:36:58Z", "stage": "discover", "event": "start"}
+{"ts": "2026-04-20T23:37:06Z", "stage": "discover", "event": "candidate", "hash": "\"71c83f2\"", "subject": "\"Stop accepting whitespace in FromHex::from_hex\"", "files": "1", "hunks": "2"}
+{"ts": "2026-04-20T23:37:06Z", "stage": "discover", "event": "candidate", "hash": "\"764ee61\"", "subject": "\"Fix Error::InvalidHexCharacter::to_string\"", "files": "1", "hunks": "2"}
+{"ts": "2026-04-20T23:37:06Z", "stage": "discover", "event": "done", "commits_scanned": "137", "fix_commits": "2"}
+{"ts":"2026-04-20T23:51:52Z","stage":"atomize","event":"variant","variant":"from_hex_accepts_whitespace_71c83f2_1","property":"from_hex_rejects_whitespace","injection":"marauder","witnesses":["witness_from_hex_rejects_whitespace_case_space_at_start","witness_from_hex_rejects_whitespace_case_tab_mid_string"]}
+{"ts":"2026-04-20T23:51:52Z","stage":"atomize","event":"variant","variant":"invalid_char_display_raw_764ee61_1","property":"invalid_char_error_display_escaped","injection":"marauder","witnesses":["witness_invalid_char_error_display_escaped_case_newline","witness_invalid_char_error_display_escaped_case_tab"]}
+{"ts":"2026-04-20T23:51:52Z","stage":"atomize","event":"done","variants":2}
+{"ts":"2026-04-20T23:51:52Z","stage":"runner","event":"done","tools":["etna","proptest","quickcheck","crabcheck","hegel"]}
+{"ts":"2026-04-20T23:52:44Z","stage":"document","event":"done","files":["BUGS.md","TASKS.md"]}
