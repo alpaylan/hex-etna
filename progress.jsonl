@@ -10,3 +10,4 @@
 {"ts":"2026-04-20T23:58:30Z","stage":"atomize","event":"variant_committed","name":"from_hex_accepts_whitespace_71c83f2_1","branch":"etna/from_hex_accepts_whitespace_71c83f2_1"}
 {"ts":"2026-04-20T23:58:30Z","stage":"atomize","event":"variant_committed","name":"invalid_char_display_raw_764ee61_1","branch":"etna/invalid_char_display_raw_764ee61_1"}
 {"ts":"2026-04-20T23:58:30Z","stage":"validate","event":"done","variants":2,"tasks":8,"base_commit":"9b8c4894244be7b128e2c3cd8527c847dd2538cf","branches":["etna/from_hex_accepts_whitespace_71c83f2_1","etna/invalid_char_display_raw_764ee61_1"]}
+{"ts":"2026-04-21T00:02:20Z","stage":"validate","event":"final","variants":2,"tasks":8,"base_commit":"6d94309b46ea1bf0f6c6b6e39a46d58c3bcd0ae9","witnesses_base":"4/4","witnesses_v1_branch":"2 fail / 2 pass","witnesses_v2_branch":"2 fail / 2 pass","framework_coverage":{"proptest":2,"quickcheck":2,"crabcheck":2,"hegel":2}}
