@@ -33,8 +33,8 @@ injection = "marauder"
 marauder = "invalid_char_display_raw"
 source_commit = "764ee61536cbeb8cfbce6dba61c1b85398700bb6"
 witnesses = [
-    "witness_invalid_char_error_display_escaped_case_newline",
-    "witness_invalid_char_error_display_escaped_case_tab",
+    "witness_invalid_char_error_display_escaped_case_nul",
+    "witness_invalid_char_error_display_escaped_case_esc",
 ]
 frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
 files = ["src/error.rs"]

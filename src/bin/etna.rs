@@ -119,14 +119,11 @@ fn run_etna_property(property: &str) -> Outcome {
             }
         }
         "InvalidCharErrorDisplayEscaped" => {
-            // Control bytes that the buggy formatter would print raw.
-            let case1 = property_invalid_char_error_display_escaped(b'\n');
-            let case2 = property_invalid_char_error_display_escaped(b'\t');
-            let case3 = property_invalid_char_error_display_escaped(0x00);
-            match (case1, case2, case3) {
-                (PropertyResult::Fail(m), _, _)
-                | (_, PropertyResult::Fail(m), _)
-                | (_, _, PropertyResult::Fail(m)) => Err(m),
+            // Non-whitespace control bytes the buggy formatter would print raw.
+            let case1 = property_invalid_char_error_display_escaped(0x00);
+            let case2 = property_invalid_char_error_display_escaped(0x1b);
+            match (case1, case2) {
+                (PropertyResult::Fail(m), _) | (_, PropertyResult::Fail(m)) => Err(m),
                 _ => Ok(()),
             }
         }

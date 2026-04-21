@@ -14,7 +14,7 @@ Total mutations: 2
 | Variant | Property | Witness(es) |
 |---------|----------|-------------|
 | `from_hex_accepts_whitespace_71c83f2_1` | `property_from_hex_rejects_whitespace` | `witness_from_hex_rejects_whitespace_case_space_at_start`, `witness_from_hex_rejects_whitespace_case_tab_mid_string` |
-| `invalid_char_display_raw_764ee61_1` | `property_invalid_char_error_display_escaped` | `witness_invalid_char_error_display_escaped_case_newline`, `witness_invalid_char_error_display_escaped_case_tab` |
+| `invalid_char_display_raw_764ee61_1` | `property_invalid_char_error_display_escaped` | `witness_invalid_char_error_display_escaped_case_nul`, `witness_invalid_char_error_display_escaped_case_esc` |
 
 ## Framework Coverage
 
@@ -38,7 +38,7 @@ Total mutations: 2
 - **Variant**: `invalid_char_display_raw_764ee61_1`
 - **Location**: `src/error.rs`, inside `impl fmt::Display for FromHexError` at the `InvalidHexCharacter` arm.
 - **Property**: `property_invalid_char_error_display_escaped`
-- **Witness(es)**: `witness_invalid_char_error_display_escaped_case_newline`, `witness_invalid_char_error_display_escaped_case_tab`
+- **Witness(es)**: `witness_invalid_char_error_display_escaped_case_nul`, `witness_invalid_char_error_display_escaped_case_esc`
 - **Fix commit**: `764ee61536cbeb8cfbce6dba61c1b85398700bb6` — `Fix Error::InvalidHexCharacter::to_string`.
 - **Invariant violated**: The `Display` output for `FromHexError::InvalidHexCharacter { c, index }` must render `c` via its `{:?}` debug representation so control/whitespace bytes are escaped (e.g. `'\n'`, `'\t'`). It must NOT contain the raw character verbatim, which would produce ambiguous, multi-line, or terminal-hostile messages.
 - **How the mutation triggers**: The marauder switches the format string from `"Invalid character {c:?} at position {index}"` back to `"Invalid character '{}' at position {}"` (the pre-fix form). For a control byte such as `b'\n'`, `to_string()` then produces `"Invalid character '\n' at position 0"` with an embedded raw newline — the property detects the raw byte in the rendered string and fails.

@@ -54,24 +54,25 @@ fn witness_from_hex_rejects_whitespace_case_tab_mid_string() {
 
 // ────────── Variant: invalid_char_display_raw_764ee61_1 ──────────
 
-// Buggy display format '{}' interpolates b'\n' as a literal newline inside
-// the error message; fixed format {:?} escapes it as '\n'. The property
+// Buggy display format '{}' interpolates NUL as a literal 0x00 byte inside
+// the error message; fixed format {:?} escapes it as '\u{0}'. The property
 // inspects `to_string()` of the resulting FromHexError for the presence of
-// the raw character.
+// the raw character. NUL is chosen over `\n`/`\t` so this witness isolates
+// the display bug from the whitespace-handling bug in variant 1.
 #[test]
-fn witness_invalid_char_error_display_escaped_case_newline() {
+fn witness_invalid_char_error_display_escaped_case_nul() {
     expect_pass(
-        property_invalid_char_error_display_escaped(b'\n'),
-        "invalid_char_error_display_escaped / newline",
+        property_invalid_char_error_display_escaped(0x00),
+        "invalid_char_error_display_escaped / nul",
     );
 }
 
-// Tab character (0x09): identical reasoning; buggy formatter leaks a raw
-// tab into the message.
+// ESC (0x1b): another control byte that's neither hex-valid nor
+// whitespace. Buggy formatter leaks raw ESC; fixed formatter escapes.
 #[test]
-fn witness_invalid_char_error_display_escaped_case_tab() {
+fn witness_invalid_char_error_display_escaped_case_esc() {
     expect_pass(
-        property_invalid_char_error_display_escaped(b'\t'),
-        "invalid_char_error_display_escaped / tab",
+        property_invalid_char_error_display_escaped(0x1b),
+        "invalid_char_error_display_escaped / esc",
     );
 }
