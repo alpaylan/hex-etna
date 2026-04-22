@@ -1,40 +1,60 @@
-# ETNA workload index for hex.
-#
-# One [[variant]] per injected mutation. Source of truth for variant->property
-# mapping. Every other fact is derivable from the source tree:
-#   - marauders list --path .                      (inline marauder mutations)
-#   - grep -rn "pub fn property_" src/etna.rs      (property functions)
-#   - grep -rn "fn witness_.*_case_" tests/        (witness tests)
-#
-# Base commit for this workload is HEAD of master on this tree. Every
-# etna/<variant> branch is master + exactly one marauder converted to its
-# functional form (or an env var M_<variant>=active flip).
-
 name = "hex"
-language = "Rust"
+language = "rust"
+crate = "hex"
+base_commit = "c0908dc6bb5ad8b0b22b2fd2a80c32d482f6a171"
 
-[[variant]]
-name = "from_hex_accepts_whitespace_71c83f2_1"
-property = "from_hex_rejects_whitespace"
-injection = "marauder"
-marauder = "from_hex_accepts_whitespace"
-source_commit = "71c83f2c7aec37c83185d4bb6d81e33f0269b7f4"
-witnesses = [
-    "witness_from_hex_rejects_whitespace_case_space_at_start",
-    "witness_from_hex_rejects_whitespace_case_tab_mid_string",
-]
-frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+[[tasks]]
+mutations = ["from_hex_accepts_whitespace_71c83f2_1"]
+
+[tasks.source]
+repo = "https://github.com/KokaKiwi/rust-hex"
+commits = ["71c83f2349d847ec95bf1ee6080ecdc7ca665037"]
+commit_subjects = ["Stop accepting whitespace in `FromHex::from_hex`."]
+summary = "`FromHex::from_hex` historically accepted ASCII whitespace and silently treated each whitespace byte as the `0` nibble, quietly corrupting decoded output. The fix drops the whitespace short-circuit so any non-hex byte produces `InvalidHexCharacter`."
+
+[tasks.injection]
+kind = "marauders"
 files = ["src/lib.rs"]
+locations = [{ file = "src/lib.rs" }]
 
-[[variant]]
-name = "invalid_char_display_raw_764ee61_1"
-property = "invalid_char_error_display_escaped"
-injection = "marauder"
-marauder = "invalid_char_display_raw"
-source_commit = "764ee61536cbeb8cfbce6dba61c1b85398700bb6"
+[tasks.bug]
+short_name = "from_hex_accepts_whitespace"
+invariant = "`decode` must reject any byte that is not in `[0-9a-fA-F]`. In particular, ASCII whitespace bytes (`b' '`, `b'\\t'`, `b'\\n'`, `b'\\r'`) must produce `FromHexError::InvalidHexCharacter { c, index }` pointing at the offending byte, not be silently treated as the zero nibble."
+how_triggered = """
+The marauder replaces the fixed `val()` body with a pre-71c83f2 variant that, for each byte, first checks `matches!(b, b' ' | b'\\t' | b'\\n' | b'\\r')` and returns `Some(0)` for whitespace. As a result the buggy decoder silently converts inputs like `" 0ab1"` into `[0x00, 0xab, 0x10]` instead of erroring — the property observes the `Ok(_)` return and fails.
+"""
+
+[[tasks.tasks]]
+property = "FromHexRejectsWhitespace"
 witnesses = [
-    "witness_invalid_char_error_display_escaped_case_nul",
-    "witness_invalid_char_error_display_escaped_case_esc",
+  { test_fn = "witness_from_hex_rejects_whitespace_case_space_at_start" },
+  { test_fn = "witness_from_hex_rejects_whitespace_case_tab_mid_string" },
 ]
-frameworks = ["proptest", "quickcheck", "crabcheck", "hegel"]
+
+[[tasks]]
+mutations = ["invalid_char_display_raw_764ee61_1"]
+
+[tasks.source]
+repo = "https://github.com/KokaKiwi/rust-hex"
+commits = ["764ee61536cbeb8cfbce6dba61c1b85398700bb6"]
+commit_subjects = ["Fix `Error::InvalidHexCharacter::to_string`."]
+summary = "The pre-fix `Display` impl formatted `InvalidHexCharacter` with `'{}'` around the raw byte, so control characters (newline, tab, NUL, escape) appeared literally in error messages and broke terminal output. The fix uses the `{:?}` debug formatter to escape non-printable bytes."
+
+[tasks.injection]
+kind = "marauders"
 files = ["src/error.rs"]
+locations = [{ file = "src/error.rs" }]
+
+[tasks.bug]
+short_name = "invalid_char_display_raw"
+invariant = "The `Display` output for `FromHexError::InvalidHexCharacter { c, index }` must render `c` via its `{:?}` debug representation so control/whitespace bytes are escaped (e.g. `'\\n'`, `'\\t'`). It must NOT contain the raw character verbatim, which would produce ambiguous, multi-line, or terminal-hostile messages."
+how_triggered = """
+The marauder switches the format string from `"Invalid character {c:?} at position {index}"` back to `"Invalid character '{}' at position {}"` (the pre-fix form). For a control byte such as `b'\\n'`, `to_string()` then produces `"Invalid character '\\n' at position 0"` with an embedded raw newline — the property detects the raw byte in the rendered string and fails.
+"""
+
+[[tasks.tasks]]
+property = "InvalidCharErrorDisplayEscaped"
+witnesses = [
+  { test_fn = "witness_invalid_char_error_display_escaped_case_nul" },
+  { test_fn = "witness_invalid_char_error_display_escaped_case_esc" },
+]
