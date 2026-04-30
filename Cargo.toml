@@ -34,8 +34,8 @@ required-features = ["etna"]
 [dependencies]
 serde = { version = "1.0", default-features = false, optional = true }
 proptest = { version = "1", optional = true }
-quickcheck = { path = "/Users/akeles/Programming/projects/PbtBenchmark/quickcheck", features = ["etna"], optional = true }
-crabcheck = { path = "/Users/akeles/Programming/projects/PbtBenchmark/crabcheck", optional = true }
+quickcheck = { git = "https://github.com/alpaylan/quickcheck.git", branch = "master", features = ["etna"], optional = true }
+crabcheck = { git = "https://github.com/alpaylan/crabcheck.git", branch = "main", optional = true }
 hegeltest = { version = "0.3.7", optional = true }
 rand = { version = "0.9", optional = true }
 
