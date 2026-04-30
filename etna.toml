@@ -1,5 +1,6 @@
 name = "hex"
 language = "rust"
+strategies = ["proptest", "quickcheck", "crabcheck", "hegel"]
 crate = "hex"
 base_commit = "c0908dc6bb5ad8b0b22b2fd2a80c32d482f6a171"
 
