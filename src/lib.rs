@@ -196,7 +196,6 @@ static DECODE_TABLE: [u8; 256] = [
 
 #[inline]
 fn val(bytes: &[u8], idx: usize) -> Result<u8, FromHexError> {
-/*| from_hex_accepts_whitespace */
 {
     let upper = DECODE_TABLE[bytes[0] as usize];
     let lower = DECODE_TABLE[bytes[1] as usize];
@@ -214,31 +213,6 @@ fn val(bytes: &[u8], idx: usize) -> Result<u8, FromHexError> {
     }
     Ok((upper << 4) | lower)
 }
-/*|| from_hex_accepts_whitespace_71c83f2_1 */
-/*|
-{
-    // Pre-71c83f2 (Mar 2016) behavior: silently accept ASCII whitespace bytes
-    // as the zero nibble, rather than rejecting them as invalid hex characters.
-    let getv = |b: u8| -> Option<u8> {
-        if matches!(b, b' ' | b'\t' | b'\n' | b'\r') {
-            Some(0)
-        } else {
-            let v = DECODE_TABLE[b as usize];
-            if v == u8::MAX { None } else { Some(v) }
-        }
-    };
-    let upper = match getv(bytes[0]) {
-        Some(v) => v,
-        None => return Err(FromHexError::InvalidHexCharacter { c: bytes[0] as char, index: idx }),
-    };
-    let lower = match getv(bytes[1]) {
-        Some(v) => v,
-        None => return Err(FromHexError::InvalidHexCharacter { c: bytes[1] as char, index: idx + 1 }),
-    };
-    Ok((upper << 4) | lower)
-}
-*/
-/* |*/
 }
 
 #[cfg(feature = "alloc")]

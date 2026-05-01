@@ -24,13 +24,7 @@ impl fmt::Display for FromHexError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             FromHexError::InvalidHexCharacter { c, index } => {
-                /*| invalid_char_display_raw */
                 write!(f, "Invalid character {c:?} at position {index}")
-                /*|| invalid_char_display_raw_764ee61_1 */
-                /*|
-                write!(f, "Invalid character '{}' at position {}", c, index)
-                */
-                /* |*/
             }
             FromHexError::OddLength => write!(f, "Odd number of digits"),
             FromHexError::InvalidStringLength => write!(f, "Invalid string length"),

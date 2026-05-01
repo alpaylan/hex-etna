@@ -14,7 +14,8 @@ commit_subjects = ["Stop accepting whitespace in `FromHex::from_hex`."]
 summary = "`FromHex::from_hex` historically accepted ASCII whitespace and silently treated each whitespace byte as the `0` nibble, quietly corrupting decoded output. The fix drops the whitespace short-circuit so any non-hex byte produces `InvalidHexCharacter`."
 
 [tasks.injection]
-kind = "marauders"
+kind = "patch"
+patch = "patches/from_hex_accepts_whitespace_71c83f2_1.patch"
 files = ["src/lib.rs"]
 locations = [{ file = "src/lib.rs" }]
 
@@ -42,7 +43,8 @@ commit_subjects = ["Fix `Error::InvalidHexCharacter::to_string`."]
 summary = "The pre-fix `Display` impl formatted `InvalidHexCharacter` with `'{}'` around the raw byte, so control characters (newline, tab, NUL, escape) appeared literally in error messages and broke terminal output. The fix uses the `{:?}` debug formatter to escape non-printable bytes."
 
 [tasks.injection]
-kind = "marauders"
+kind = "patch"
+patch = "patches/invalid_char_display_raw_764ee61_1.patch"
 files = ["src/error.rs"]
 locations = [{ file = "src/error.rs" }]
 

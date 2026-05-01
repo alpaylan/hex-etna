@@ -1,0 +1,13 @@
+# marauders: name=invalid_char_display_raw
+diff --git a/src/error.rs b/src/error.rs
+--- a/src/error.rs
++++ b/src/error.rs
+@@ -24,7 +24,7 @@
+     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+         match *self {
+             FromHexError::InvalidHexCharacter { c, index } => {
+-                write!(f, "Invalid character {c:?} at position {index}")
++                write!(f, "Invalid character '{}' at position {}", c, index)
+             }
+             FromHexError::OddLength => write!(f, "Odd number of digits"),
+             FromHexError::InvalidStringLength => write!(f, "Invalid string length"),
