@@ -12,3 +12,12 @@ Justfile
 !.*.toml
 !.*.yaml
 !.*.yml
+
+# etna runtime artifacts (auto-added)
+/coverage/
+*.profraw
+/profdata/
+/.marauders/
+/.hegel/
+/etna.log
+/progress.jsonl

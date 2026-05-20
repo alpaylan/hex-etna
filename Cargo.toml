@@ -31,6 +31,11 @@ name = "etna"
 path = "src/bin/etna.rs"
 required-features = ["etna"]
 
+[[bin]]
+name = "etna-faultloc"
+path = "src/bin/etna-faultloc.rs"
+required-features = ["etna"]
+
 [dependencies]
 serde = { version = "1.0", default-features = false, optional = true }
 proptest = { version = "1", optional = true }
